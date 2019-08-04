@@ -1,39 +1,38 @@
 const fs = require('fs');
 const colors = require('colors');
 
-let toDos = [];
 
-
-const guardarDB = () => {
-
-    let data = JSON.stringify(toDos);
-    fs.writeFile('db/data.json', data, error => {
-        if (error) throw new Error('No se pudo grabar');
-    })
-
-}
-
-const cargarDB = () => {
-
+const getToDos = () => {
     try {
-        toDos = require('../db/data.json');
+        return require('../db/data.json');
     } catch (error) {
-        toDos = [];
+        return [];
     }
 }
 
+
+const guardarDB = (toDos) => {
+
+    fs.writeFile('db/data.json', JSON.stringify(getToDos()), error => {
+        if (error) throw new Error('No se pudo grabar');
+    });
+
+}
+
+
 const listar = () => {
-    cargarDB();
-    toDos.forEach(todo => {
+
+    getToDos().forEach(todo => {
         console.log('===========Tarea==========='.green);
         console.log(todo.descripcion);
         console.log(`Estado: ${todo.completado}`);
         console.log('========================= \n'.green);
     })
+
 }
 
 const crear = descripcion => {
-    cargarDB();
+    let toDos = getToDos();
 
     let task = {
         descripcion,
@@ -41,18 +40,18 @@ const crear = descripcion => {
     };
 
     toDos.push(task);
-    guardarDB();
+    guardarDB(toDos);
 
     return task.descripcion;
 }
 
 
 const actualizar = (descripcion, completado = true) => {
-    cargarDB();
+    let toDos = getToDos();
     let index = toDos.findIndex(todo => todo.descripcion === descripcion);
     if (index >= 0) {
         toDos[index].completado = completado;
-        guardarDB();
+        guardarDB(toDos);
         return true;
     } else {
         return false;
@@ -61,7 +60,7 @@ const actualizar = (descripcion, completado = true) => {
 }
 
 const eliminar = descripcion => {
-    cargarDB();
+    let toDos = getToDos();
     let index = toDos.findIndex(todo => todo.descripcion === descripcion);
     if (index >= 0) {
         toDos.splice(index, 1)
@@ -71,6 +70,8 @@ const eliminar = descripcion => {
         return false;
     }
 }
+
+
 module.exports = {
     listar,
     crear,

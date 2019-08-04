@@ -17,15 +17,14 @@ switch (comando) {
 
     case 'actualizar':
         let actualizado = todos.actualizar(argv.descripcion, argv.completado)
-        if (actualizado) console.log(`Se completo la tarea: ${argv.descripcion}`)
-        else console.log('La tarea que intenta actualizar no existe');
+        actualizado ? console.log(`Se actualizo la tarea: ${argv.descripcion}`) : console.log('La tarea que intenta actualizar no existe');
         break;
 
     case 'eliminar':
         let eliminado = todos.eliminar(argv.descripcion)
-        if (eliminado) console.log(`Se elimino: ${argv.descripcion}`)
-        else console.log('La tarea que intenta eliminar no existe');
+        eliminado ? console.log(`Se elimino: ${argv.descripcion}`) : console.log('La tarea que intenta eliminar no existe');
         break;
+
 
     default:
         console.log('Comando no reconocido');
